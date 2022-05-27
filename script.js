@@ -16,6 +16,7 @@ let performanceMeasure = {
     averageArray: []
 }
 let showPerformance = false
+let isPaused = false
 
 //average performance over time
 
@@ -78,6 +79,7 @@ function makeParticle(particle, coords) {
         grid[x][y] = particleFunc()
         grid[x - 1][y - 1] = particleFunc()
         grid[x - 1][y + 1] = particleFunc()
+        grid[x - 2][y] = particleFunc()
     }
 
     switch (particle) {
@@ -121,6 +123,11 @@ function toggleButtonClass(id) {
 
 function handleCheckPerformance(event) {
     showPerformance = event.checked
+}
+
+
+function changePause(bool) {
+    isPaused = bool
 }
 
 function truePosition(e) {
@@ -376,6 +383,8 @@ function updateSand(particle, grid) {
 }
 
 function update2() {
+    if (isPaused) return
+
     const startPerf = performance.now()
 
     let updatedGrid = generateSpecGrid()
@@ -499,6 +508,7 @@ function update2() {
 
     grid.forEach((col, x) => {
         col.forEach((particle, y) => {
+
             if (particle.type === 'sand') {
                 sandLogic(x, y)
             }
