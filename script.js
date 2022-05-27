@@ -69,39 +69,35 @@ function hslToHex(h, s, l) {
     return `#${f(0)}${f(8)}${f(4)}`;
 }
 
-function makeParticle2(particle, x, y) {
-    const dropArray = [[x, y], [x + 1][y + 1]]
-    const particleObj = null
-
-    if (particle == 'sand') {
-        dropArray.forEach(c => {
-            grid[c[0]][c[1]] = 'nothing' // need to make a function to return a sand object without placing on the grid
-        })
-    }
-
-}
-
-
 function makeParticle(particle, coords) {
+
+    function addParticleToGrid(particleFunc, coords) {
+        const x = coords.x
+        const y = coords.y
+
+        grid[x][y] = particleFunc()
+        grid[x - 1][y - 1] = particleFunc()
+        grid[x - 1][y + 1] = particleFunc()
+    }
 
     switch (particle) {
         case 'sand':
-            grid[coords.x][coords.y] = createSand()
+            addParticleToGrid(createSand, coords)
             break;
         case 'blueSand':
-            grid[coords.x][coords.y] = createBlueSand()
+            addParticleToGrid(createBlueSand, coords)
             break;
         case 'rainbowSand':
-            grid[coords.x][coords.y] = createRainbowSand()
+            addParticleToGrid(createRainbowSand, coords)
             break;
         case 'wall':
-            grid[coords.x][coords.y] = createWall()
+            addParticleToGrid(createWall, coords)
             break;
         case 'water':
-            grid[coords.x][coords.y] = createWater()
+            addParticleToGrid(createWater, coords)
             break;
         case 'smoke':
-            grid[coords.x][coords.y] = createSmoke()
+            addParticleToGrid(createSmoke, coords)
             break;
     }
 }
@@ -222,8 +218,6 @@ function createWater() {
         flowDir: 'left'
     }
 }
-
-
 
 
 
