@@ -82,25 +82,26 @@ function makeParticle2(particle, x, y) {
 }
 
 
-function makeParticle(particle, coord) {
+function makeParticle(particle, coords) {
+
     switch (particle) {
         case 'sand':
-            makeSand(coord)
+            grid[coords.x][coords.y] = createSand()
             break;
         case 'blueSand':
-            makeBlueSand(coord)
+            grid[coords.x][coords.y] = createBlueSand()
             break;
         case 'rainbowSand':
-            makeRainbowSand(coord)
+            grid[coords.x][coords.y] = createRainbowSand()
             break;
         case 'wall':
-            makeWall(coord)
+            grid[coords.x][coords.y] = createWall()
             break;
         case 'water':
-            makeWater(coord)
+            grid[coords.x][coords.y] = createWater()
             break;
         case 'smoke':
-            makeSmoke(coord)
+            grid[coords.x][coords.y] = createSmoke()
             break;
     }
 }
@@ -149,27 +150,11 @@ function generateSpecGrid() {
     return generateGrid(canvas.width / gridSize, canvas.height / gridSize)
 }
 
-function makeSand(coords) {
+//-- new create particles functions 
+
+function createSand() {
     const colours = ['#ab8f43', '#bd7f46', '#d9bb50', '#ad8540']
-    grid[coords.x][coords.y] = {
-        type: 'sand',
-        colour: getRandom(colours),
-        density: 20,
-        fluid: false,
-        acc: 0,
-        fixed: false
-    }
-
-    grid[coords.x][coords.y + 1] = {
-        type: 'sand',
-        colour: getRandom(colours),
-        density: 20,
-        fluid: false,
-        acc: 0,
-        fixed: false
-    }
-
-    grid[coords.x + 1][coords.y + 1] = {
+    return {
         type: 'sand',
         colour: getRandom(colours),
         density: 20,
@@ -179,28 +164,16 @@ function makeSand(coords) {
     }
 }
 
-function makeSmoke(coords) {
+function createSmoke() {
     const colours = ['#a0a0a0']
-    grid[coords.x][coords.y] = {
+    return {
         type: 'smoke',
         colour: getRandom(colours)
     }
 }
 
-function makeBlueSand(coords) {
-    const colours = ['#3366ff', '#0000ff', '#6699ff', '#3399ff']
-    grid[coords.x][coords.y] = {
-        type: 'sand',
-        colour: getRandom(colours),
-        density: 20,
-        fluid: false,
-        acc: 0,
-        fixed: false
-    }
-}
-
-function makeRainbowSand(coords) {
-    grid[coords.x][coords.y] = {
+function createRainbowSand() {
+    return {
         type: 'sand',
         colour: rainbowColourArray[0],
         density: 20,
@@ -212,9 +185,21 @@ function makeRainbowSand(coords) {
     }
 }
 
-function makeWall(coords) {
+function createBlueSand() {
+    const colours = ['#3366ff', '#0000ff', '#6699ff', '#3399ff']
+    return {
+        type: 'sand',
+        colour: getRandom(colours),
+        density: 20,
+        fluid: false,
+        acc: 0,
+        fixed: false
+    }
+}
+
+function createWall() {
     const colours = ['#606060']
-    grid[coords.x][coords.y] = {
+    return {
         type: 'wall',
         colour: getRandom(colours),
         density: 50,
@@ -224,9 +209,9 @@ function makeWall(coords) {
     }
 }
 
-function makeWater(coords) {
+function createWater() {
     const colours = ['#0099ff', '#00ffff', '#66ffff'] //water can sparkle, change colour of pixels
-    grid[coords.x][coords.y] = {
+    return {
         type: 'water',
         colour: getRandom(colours),
         density: 10,
@@ -238,13 +223,105 @@ function makeWater(coords) {
     }
 }
 
-const air = {
-    type: 'air',
-    color: null,
-    density: 0,
-    fluid: true
-}
 
+
+
+
+function unused() {
+    // ----- make functions
+    //make functions should be replaces by functions that just return a particle object
+    //placing them on a grid should be done elsewhere
+
+    function makeSand(coords) {
+        const colours = ['#ab8f43', '#bd7f46', '#d9bb50', '#ad8540']
+        grid[coords.x][coords.y] = {
+            type: 'sand',
+            colour: getRandom(colours),
+            density: 20,
+            fluid: false,
+            acc: 0,
+            fixed: false
+        }
+
+        grid[coords.x][coords.y + 1] = {
+            type: 'sand',
+            colour: getRandom(colours),
+            density: 20,
+            fluid: false,
+            acc: 0,
+            fixed: false
+        }
+
+        grid[coords.x + 1][coords.y + 1] = {
+            type: 'sand',
+            colour: getRandom(colours),
+            density: 20,
+            fluid: false,
+            acc: 0,
+            fixed: false
+        }
+    }
+
+    function makeSmoke(coords) {
+        const colours = ['#a0a0a0']
+        grid[coords.x][coords.y] = {
+            type: 'smoke',
+            colour: getRandom(colours)
+        }
+    }
+
+    function makeBlueSand(coords) {
+        const colours = ['#3366ff', '#0000ff', '#6699ff', '#3399ff']
+        grid[coords.x][coords.y] = {
+            type: 'sand',
+            colour: getRandom(colours),
+            density: 20,
+            fluid: false,
+            acc: 0,
+            fixed: false
+        }
+    }
+
+    function makeRainbowSand(coords) {
+        grid[coords.x][coords.y] = {
+            type: 'sand',
+            colour: rainbowColourArray[0],
+            density: 20,
+            fluid: false,
+            acc: 0,
+            fixed: false,
+            colourIndex: 0, //if we keep track of the index, we don't need to find the index
+            flashing: true
+        }
+    }
+
+    function makeWall(coords) {
+        const colours = ['#606060']
+        grid[coords.x][coords.y] = {
+            type: 'wall',
+            colour: getRandom(colours),
+            density: 50,
+            fluid: false,
+            acc: 0,
+            fixed: true
+        }
+    }
+
+    function makeWater(coords) {
+        const colours = ['#0099ff', '#00ffff', '#66ffff'] //water can sparkle, change colour of pixels
+        grid[coords.x][coords.y] = {
+            type: 'water',
+            colour: getRandom(colours),
+            density: 10,
+            fluid: true,
+            acc: 0,
+            fixed: false,
+            direction: 1,
+            flowDir: 'left'
+        }
+    }
+
+}
 
 
 function getRandom(array) {
@@ -560,26 +637,17 @@ setInterval(render, 1000 / FPS)
 setInterval(update2, 1000 / gameSpeed)
 
 
-        //NOTES
 
-        //fill starting array with air
-        //if density below is lower, swap positions
-        //then specific rules
-        //  sand - fall if no sand on either side
-
-        //cursor should indicate which elemnt is selected (sand, water, air, etc)
-
-        //add acceleration due to gravity
-        //if acc>10, fall 3 squares
-        //if acc>5 fall 2 squares
-        //else fall one square
-        //check all 3 squares are empty, otherwise land on something
-        //inc acc by 1 each time it falls
-
-        //add 'game of life' element that follow game of life rules
-
-        //pause, play button
-
-        //create a border around the grid array, to avoid checking undefined array spaces?
-
-        //flip gravity button
+/**
+ * NOTES/IDEAS
+ * 
+ * cursor should indicate which elemnt is selected (sand, water, air, etc)
+ * 
+ * add 'game of life' element that follow game of life rules
+ * 
+ * pause, play button
+ * 
+ * flip gravity button
+ * 
+ * 
+ */
